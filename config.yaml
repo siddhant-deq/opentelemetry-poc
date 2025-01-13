@@ -2,9 +2,7 @@ receivers:
   otlp:
     protocols:
       grpc:
-        endpoint: 0.0.0.0:6004
-      http:
-        endpoint: 0.0.0.0:6006
+        endpoint: ${COLLECTOR_ENDPOINT}:${COLLECTOR_GRPC_PORT}
 
 processors:
   batch: {} # Add a batch processor for traces and metrics
@@ -13,11 +11,8 @@ exporters:
   debug:
     verbosity: detailed
 
-  prometheus:
-    endpoint: "0.0.0.0:9464" # Expose metrics for Prometheus scraping
-
   otlp/localcollector:
-    endpoint: http://localhost:4317
+    endpoint: ${COLLECTOR_ENDPOINT}:${COLLECTOR_GRPC_PORT}
     tls:
       insecure: true
 
@@ -31,4 +26,4 @@ service:
     metrics:
       receivers: [otlp]
       processors: [batch]
-      exporters: [prometheus, debug] # Export metrics to Prometheus and debug logs
+      exporters: [otlp/localcollector, debug]

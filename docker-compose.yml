@@ -1,0 +1,12 @@
+version: '3.7'
+
+services:
+  otel-collector:
+    image: otel/opentelemetry-collector:latest
+    ports:
+      - "4317:4317"
+    volumes:
+      - ./config.yaml:/etc/otel/config.yaml
+    env_file:
+      - .env
+    command: ["--config", "/etc/otel/config.yaml"]

@@ -23,12 +23,15 @@ import pandas as pd
 import time
 import random
 
+from opentelemetry.sdk.error_handler import GlobalErrorHandler
+
+
 #Resource
 resource = Resource(attributes={"service.name": "Trial-App", "os-version": 1234.56, "cluster": "A", "datacentre": "BNE"})
 
 #Tracing Initialization
 COLLECTOR_ENDPOINT = "127.0.0.1"
-COLLECTOR_GRPC_PORT = 6004
+COLLECTOR_GRPC_PORT = 4317
 provider = TracerProvider(resource=resource)
 processor = BatchSpanProcessor(OTLPSpanExporter(endpoint=f"http://{COLLECTOR_ENDPOINT}:{COLLECTOR_GRPC_PORT}", insecure=True))
 provider.add_span_processor(processor)
